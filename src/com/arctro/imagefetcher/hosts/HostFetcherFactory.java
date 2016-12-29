@@ -7,6 +7,8 @@ public class HostFetcherFactory {
 			return new ImgurHostFetcher();
 		case "giphy.com":
 			return new GiphyHostFetcher();
+		case "gfycat.com":
+			return new GfycatHostFetcher();
 		}
 		return null;
 	}
