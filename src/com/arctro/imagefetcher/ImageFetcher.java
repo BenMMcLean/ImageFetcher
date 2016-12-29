@@ -131,10 +131,10 @@ public class ImageFetcher {
 			String[] uComp = u.split("/|\\?|#");
 			
 			//Check if contains a domain
+			if(u.startsWith("//")){
+				return new URL("http:" + u);
+			}
 			if(uComp[0].contains(".")){
-				if(u.startsWith("//")){
-					return new URL("http:" + u);
-				}
 				return new URL("http://" + u);
 			}
 			
