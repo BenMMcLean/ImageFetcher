@@ -15,7 +15,7 @@ import org.jsoup.select.Elements;
 
 public class ImageFetcher {
 	
-	public IFS[] search = {new IFS(".post-image-placeholder", "src"), new IFS("[name=og:image]","href"), new IFS("[property=og:image]","content"), new IFS("[name=twitter:image]","content")};
+	public IFS[] search = {new IFS("[name=twitter:image]","content"), new IFS("[name=og:image]","href"), new IFS("[property=og:image]","content")};
 	
 	public ImageFetcher(){}
 	
@@ -77,6 +77,10 @@ public class ImageFetcher {
 	
 	private URL genURL(URL main, String u) throws MalformedURLException{
 		URL url = null;
+		
+		if(u.endsWith("?fb")){
+			u = u.substring(0, u.length() - 3);
+		}
 		
 		try{
 			url = new URL(u);
