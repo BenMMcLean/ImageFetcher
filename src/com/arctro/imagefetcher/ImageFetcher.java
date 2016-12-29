@@ -15,7 +15,7 @@ import org.jsoup.select.Elements;
 
 public class ImageFetcher {
 	
-	public IFS[] search = {new IFS("[name=og:image]","href"), new IFS("[property=og:image]","content"), new IFS("[name=twitter:image]","content")};
+	public IFS[] search = {new IFS(".post-image-placeholder", "src"), new IFS("[name=og:image]","href"), new IFS("[property=og:image]","content"), new IFS("[name=twitter:image]","content")};
 	
 	public ImageFetcher(){}
 	
