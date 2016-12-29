@@ -70,8 +70,6 @@ public class ImageFetcher {
 			//Download the image
 			URLConnection dl = open(genURL(url, img.attr("src")));
 			
-			System.out.println(genURL(url, img.attr("src")));
-			
 			if(isImage(dl.getContentType()) && dl.getContentLength() > contentLen){
 				contentLen = dl.getContentLength();
 				burl = img.attr("src");
@@ -119,21 +117,37 @@ public class ImageFetcher {
 	private URL genURL(URL main, String u) throws MalformedURLException{
 		URL url = null;
 		
+		if(u.equals("") || u.equals("?") || u.equals("#")){
+			return main;
+		}
+		if(u.equals("/")){
+			return new URL("http://" + main.getHost());
+		}
+		
 		try{
 			//Check if already a valid URL
 			url = new URL(u);
 		}catch(Exception e){
-			try{
-				//Check if missing protocol
-				url = new URL("http://" + u);
-			}catch(Exception e1){
-				try{
-					//Check if missing protocol and //
-					url = new URL("http:" + u);
-				}catch(Exception e2){
-					//Check if local URL
-					url = new URL(main.getProtocol() + "://" + main.getHost() + "/" + u);
+			String[] uComp = u.split("/|\\?|#");
+			
+			//Check if contains a domain
+			if(uComp[0].contains(".")){
+				if(u.startsWith("//")){
+					return new URL("http:" + u);
 				}
+				return new URL("http://" + u);
+			}
+			
+			//Check if from base
+			if(u.startsWith("/")){
+				return new URL("http://" + main.getHost() + u);
+			}
+			
+			//Add to end of current URL
+			if(main.toString().endsWith("/")){
+				return new URL(main.toString() + u);
+			}else{
+				return new URL(main.toString() + "/" + u);
 			}
 		}
 		
