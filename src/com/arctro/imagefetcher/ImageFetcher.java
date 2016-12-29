@@ -73,14 +73,18 @@ public class ImageFetcher {
 	private URL genURL(URL main, String u) throws MalformedURLException{
 		URL url = null;
 		
-		if(u.endsWith("?fb")){
-			u = u.substring(0, u.length() - 3);
-		}
-		
 		try{
 			url = new URL(u);
 		}catch(Exception e){
-			url = new URL(main.getProtocol() + "://" + main.getHost() + "/" + u);
+			try{
+				url = new URL("http://" + u);
+			}catch(Exception e1){
+				try{
+					url = new URL("http:" + u);
+				}catch(Exception e2){
+					url = new URL(main.getProtocol() + "://" + main.getHost() + "/" + u);
+				}
+			}
 		}
 		
 		return url;
