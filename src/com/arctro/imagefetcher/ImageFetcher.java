@@ -62,26 +62,27 @@ public class ImageFetcher {
 		
 		//Selects all img elements
 		Elements imgs = doc.select("img");
-		FetchResult b = null;
-		int bArea = 0;
+		String burl = null;
+		int contentLen = 0;
 		
 		//Loop through all image elements
 		for(Element img : imgs){
 			//Download the image
-			FetchResult tmp = fetchImage(genURL(url, img.attr("src")));
+			URLConnection dl = open(genURL(url, img.attr("src")));
 			
-			//Calculate size of image
-			BufferedImage bi = tmp.getBufferedImage();
-			int tmpArea = bi.getWidth() * bi.getHeight();
+			System.out.println(genURL(url, img.attr("src")));
 			
-			//If image is larger, update
-			if(b == null || bArea < tmpArea){
-				b = tmp;
-				bArea = tmpArea;
+			if(isImage(dl.getContentType()) && dl.getContentLength() > contentLen){
+				contentLen = dl.getContentLength();
+				burl = img.attr("src");
 			}
 		}
 		
-		return b;
+		if(burl == null){
+			return null;
+		}
+		
+		return fetchImage(genURL(url, burl));
 	}
 	
 	/**
