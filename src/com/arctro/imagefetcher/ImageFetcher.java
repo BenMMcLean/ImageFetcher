@@ -18,19 +18,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.arctro.imagefetcher.hosts.HostFetcher;
+import com.arctro.imagefetcher.hosts.HostFetcherFactory;
+
 public class ImageFetcher {
-	
-	public IFS[] search = {new IFS("[name=twitter:image]","content"), new IFS("[property=og:image]","content"), new IFS("[property=og:url]","url"), new IFS("[name=og:image]","href")};
-	
 	public Detector detector = TikaConfig.getDefaultConfig().getDetector();
 	
 	public ImageFetcher(){
 		
-	}
-	
-	public ImageFetcher(IFS[] search){
-		this();
-		this.search = search;
 	}
 	
 	public FetchResult fetch(URL url) throws IOException{
@@ -42,11 +37,9 @@ public class ImageFetcher {
 		
 		Document doc = Jsoup.connect(url.toString()).get();
 		
-		for(IFS s : search){
-			FetchResult b = getFromAttr(url, doc, s);
-			if(b != null){
-				return b;
-			}
+		HostFetcher fetcher = HostFetcherFactory.getFetcher(url.getHost());
+		if(fetcher != null){
+			return fetchImage(genURL(url, fetcher.get(doc)));
 		}
 		
 		Elements imgs = doc.select("img");
@@ -77,15 +70,6 @@ public class ImageFetcher {
 		return (ct.contains("image"));
 	}
 	
-	private FetchResult getFromAttr(URL main, Document doc, IFS f) throws IOException{
-		Elements link = doc.select(f.name);
-		if(link.size() > 0){
-			return fetchImage(genURL(main, link.attr(f.value)));
-		}
-		
-		return null;
-	}
-	
 	private URL genURL(URL main, String u) throws MalformedURLException{
 		URL url = null;
 		
@@ -106,32 +90,5 @@ public class ImageFetcher {
 		URLConnection conn = url.openConnection();
 		conn.setRequestProperty("User-Agent", "Arctro Scraper");
 		return conn;
-	}
-	
-	public static class IFS {
-		String name;
-		String value;
-		
-		public IFS(String name, String value) {
-			super();
-			this.name = name;
-			this.value = value;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
 	}
 }
