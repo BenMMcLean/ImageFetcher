@@ -26,6 +26,8 @@ public class HostFetcherFactory {
 			return new GfycatHostFetcher();
 		case "twitter.com":
 			return new TwitterHostFetcher();
+		case "deviantart.com":
+			return new DeviantArtHostFetcher();
 		}
 		
 		if(customHosts.containsKey(host)){
