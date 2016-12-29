@@ -9,6 +9,8 @@ public class HostFetcherFactory {
 			return new GiphyHostFetcher();
 		case "gfycat.com":
 			return new GfycatHostFetcher();
+		case "twitter.com":
+			return new TwitterHostFetcher();
 		}
 		return null;
 	}
