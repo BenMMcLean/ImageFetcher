@@ -20,7 +20,7 @@ import org.jsoup.select.Elements;
 
 public class ImageFetcher {
 	
-	public IFS[] search = {new IFS("[name=twitter:image]","content"), new IFS("[name=og:image]","href"), new IFS("[property=og:image]","content")};
+	public IFS[] search = {new IFS("[name=twitter:image]","content"),  new IFS("[name=og:url]","url"), new IFS("[property=og:image]","content"), new IFS("[name=og:image]","href")};
 	
 	public Detector detector = TikaConfig.getDefaultConfig().getDetector();
 	
