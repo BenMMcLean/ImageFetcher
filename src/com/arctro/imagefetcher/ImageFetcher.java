@@ -25,6 +25,8 @@ public class ImageFetcher {
 	
 	public BufferedImage fetch(URL url) throws IOException{
 		URLConnection conn = url.openConnection();
+		conn.setRequestProperty("User-Agent", "Arctro Scraper");
+		
 		if(isImage(conn.getContentType())){
 			return fetchImage(url);
 		}
@@ -56,6 +58,7 @@ public class ImageFetcher {
 	
 	public BufferedImage fetchImage(URL url) throws IOException{
 		URLConnection conn = url.openConnection();
+		conn.setRequestProperty("User-Agent", "Arctro Scraper");
 		return ImageIO.read(conn.getInputStream());
 	}
 	
