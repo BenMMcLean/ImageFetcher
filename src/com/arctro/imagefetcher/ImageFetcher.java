@@ -1,5 +1,6 @@
 package com.arctro.imagefetcher;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.imageio.ImageIO;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.metadata.Metadata;
@@ -55,7 +55,8 @@ public class ImageFetcher {
 		int bArea = 0;
 		for(Element img : imgs){
 			FetchResult tmp = fetchImage(genURL(url, img.attr("src")));
-			int tmpArea = tmp.getImage().getWidth() * tmp.getImage().getHeight();
+			BufferedImage bi = tmp.getBufferedImage();
+			int tmpArea = bi.getWidth() * bi.getHeight();
 			
 			if(b == null || bArea < tmpArea){
 				b = tmp;
@@ -70,7 +71,7 @@ public class ImageFetcher {
 		InputStream is = new BufferedInputStream(open(url).getInputStream());
 		
 		MediaType t = detector.detect(is, new Metadata());
-		return new FetchResult(ImageIO.read(is), t);
+		return new FetchResult(IOUtils.toByteArray(is), t);
 	}
 	
 	private boolean isImage(String ct){

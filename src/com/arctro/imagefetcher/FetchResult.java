@@ -1,25 +1,34 @@
 package com.arctro.imagefetcher;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.apache.tika.mime.MediaType;
 
 public class FetchResult {
-	BufferedImage image;
+	byte[] image;
 	MediaType type;
 	
-	public FetchResult(BufferedImage image, MediaType type) {
+	public FetchResult(byte[] image, MediaType type) {
 		super();
 		this.image = image;
 		this.type = type;
 	}
 
-	public BufferedImage getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(BufferedImage image) {
+	public void setImage(byte[] image) {
 		this.image = image;
+	}
+	
+	public BufferedImage getBufferedImage() throws IOException{
+		ByteArrayInputStream bais = new ByteArrayInputStream(image);
+		return ImageIO.read(bais);
 	}
 
 	public MediaType getType() {
