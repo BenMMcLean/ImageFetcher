@@ -92,7 +92,7 @@ public class ImageFetcher {
 	
 	private URLConnection open(URL url) throws IOException{
 		URLConnection conn = url.openConnection();
-		conn.setRequestProperty("User-Agent", "Arctro Scraper");
+		conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
 		return conn;
 	}
 }
