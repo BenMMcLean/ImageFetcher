@@ -8,8 +8,14 @@ import javax.imageio.ImageIO;
 
 import org.apache.tika.mime.MediaType;
 
+/**
+ * Holds the result of an ImageFetch
+ * @author Ben McLean
+ */
 public class FetchResult {
+	//The raw data of an image
 	byte[] image;
+	//The type of image
 	MediaType type;
 	
 	public FetchResult(byte[] image, MediaType type) {
@@ -26,9 +32,18 @@ public class FetchResult {
 		this.image = image;
 	}
 	
-	public BufferedImage getBufferedImage() throws IOException{
+	/**
+	 * Generates and returns a BufferedImage
+	 * @return Returns a BufferedImage
+	 * @throws IOException
+	 */
+	public BufferedImage getBufferedImage(){
 		ByteArrayInputStream bais = new ByteArrayInputStream(image);
-		return ImageIO.read(bais);
+		try{
+			return ImageIO.read(bais);
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 
 	public MediaType getType() {

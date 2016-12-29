@@ -1,6 +1,15 @@
 package com.arctro.imagefetcher.hosts;
 
+/**
+ * Gets the appropriate HostFetcher for the given host
+ * @author Ben McLean
+ */
 public class HostFetcherFactory {
+	/**
+	 * Returns the appropriate HostFetcher for the given host
+	 * @param host The host to get the HostFetcher for
+	 * @return The appropriate HostFetcher for the given host
+	 */
 	public static HostFetcher getFetcher(String host){
 		switch(host){
 		case "imgur.com":
