@@ -1,13 +1,18 @@
 package com.arctro.imagefetcher;
 
-import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
 
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,15 +22,20 @@ public class ImageFetcher {
 	
 	public IFS[] search = {new IFS("[name=twitter:image]","content"), new IFS("[name=og:image]","href"), new IFS("[property=og:image]","content")};
 	
-	public ImageFetcher(){}
+	public Detector detector = TikaConfig.getDefaultConfig().getDetector();
+	
+	
+	public ImageFetcher(){
+		
+	}
 	
 	public ImageFetcher(IFS[] search){
+		this();
 		this.search = search;
 	}
 	
-	public BufferedImage fetch(URL url) throws IOException{
-		URLConnection conn = url.openConnection();
-		conn.setRequestProperty("User-Agent", "Arctro Scraper");
+	public FetchResult fetch(URL url) throws IOException{
+		URLConnection conn = open(url);
 		
 		if(isImage(conn.getContentType())){
 			return fetchImage(url);
@@ -34,18 +44,18 @@ public class ImageFetcher {
 		Document doc = Jsoup.connect(url.toString()).get();
 		
 		for(IFS s : search){
-			BufferedImage b = getFromAttr(url, doc, s);
+			FetchResult b = getFromAttr(url, doc, s);
 			if(b != null){
 				return b;
 			}
 		}
 		
 		Elements imgs = doc.select("img");
-		BufferedImage b = null;
+		FetchResult b = null;
 		int bArea = 0;
 		for(Element img : imgs){
-			BufferedImage tmp = fetchImage(genURL(url, img.attr("src")));
-			int tmpArea = tmp.getWidth() * tmp.getHeight();
+			FetchResult tmp = fetchImage(genURL(url, img.attr("src")));
+			int tmpArea = tmp.getImage().getWidth() * tmp.getImage().getHeight();
 			
 			if(b == null || bArea < tmpArea){
 				b = tmp;
@@ -56,17 +66,18 @@ public class ImageFetcher {
 		return b;
 	}
 	
-	public BufferedImage fetchImage(URL url) throws IOException{
-		URLConnection conn = url.openConnection();
-		conn.setRequestProperty("User-Agent", "Arctro Scraper");
-		return ImageIO.read(conn.getInputStream());
+	public FetchResult fetchImage(URL url) throws IOException{
+		InputStream is = new BufferedInputStream(open(url).getInputStream());
+		
+		MediaType t = detector.detect(is, new Metadata());
+		return new FetchResult(ImageIO.read(is), t);
 	}
 	
 	private boolean isImage(String ct){
 		return (ct.contains("image"));
 	}
 	
-	private BufferedImage getFromAttr(URL main, Document doc, IFS f) throws IOException{
+	private FetchResult getFromAttr(URL main, Document doc, IFS f) throws IOException{
 		Elements link = doc.select(f.name);
 		if(link.size() > 0){
 			return fetchImage(genURL(main, link.attr(f.value)));
@@ -89,6 +100,12 @@ public class ImageFetcher {
 		}
 		
 		return url;
+	}
+	
+	private URLConnection open(URL url) throws IOException{
+		URLConnection conn = url.openConnection();
+		conn.setRequestProperty("User-Agent", "Arctro Scraper");
+		return conn;
 	}
 	
 	public static class IFS {
