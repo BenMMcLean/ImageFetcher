@@ -1,6 +1,5 @@
 package com.arctro.imagefetcher;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
