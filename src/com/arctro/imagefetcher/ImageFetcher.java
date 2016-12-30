@@ -53,7 +53,7 @@ public class ImageFetcher {
 		HostFetcher fetcher = HostFetcherFactory.getFetcher(url.getHost());
 		if(fetcher != null){
 			//If it is a known host use the HostFetcher returned by the HostFetcherFactory to fetch the image
-			return fetchImage(genURL(url, fetcher.get(doc)));
+			return fetchImage(genURL(url, fetcher.get(doc,url)));
 		}
 		
 		//Fallback: Generic image fetcher

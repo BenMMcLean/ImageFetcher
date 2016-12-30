@@ -1,5 +1,7 @@
 package com.arctro.imagefetcher.hosts;
 
+import java.net.URL;
+
 import org.jsoup.nodes.Document;
 
 /**
@@ -9,7 +11,7 @@ import org.jsoup.nodes.Document;
 public class GfycatHostFetcher implements HostFetcher{
 
 	@Override
-	public String get(Document d) {
+	public String get(Document d, URL u) {
 		return d.select("#large-gif").attr("href");
 	}
 
