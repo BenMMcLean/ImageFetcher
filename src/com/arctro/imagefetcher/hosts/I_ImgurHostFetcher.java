@@ -5,7 +5,7 @@ import java.net.URL;
 import org.jsoup.nodes.Document;
 
 /**
- * Host fetcher for imgur.com
+ * Host fetcher for i.imgur.com
  * @author Ben McLean
  */
 public class I_ImgurHostFetcher implements HostFetcher{

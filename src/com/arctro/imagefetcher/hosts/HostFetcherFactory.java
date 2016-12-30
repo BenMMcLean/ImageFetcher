@@ -30,6 +30,8 @@ public class HostFetcherFactory {
 			return new DeviantArtHostFetcher();
 		case "i.imgur.com":
 			return new I_ImgurHostFetcher();
+		case "imgflip.com":
+			return new ImgflipHostFetcher();
 		}
 		
 		if(customHosts.containsKey(host)){
