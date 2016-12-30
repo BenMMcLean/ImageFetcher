@@ -27,6 +27,7 @@ import com.arctro.imagefetcher.hosts.HostFetcherFactory;
 public class ImageFetcher {
 	//The default filetype detector
 	public Detector detector = TikaConfig.getDefaultConfig().getDetector();
+	public static String userAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 	
 	public ImageFetcher(){
 		
@@ -47,7 +48,7 @@ public class ImageFetcher {
 		}
 		
 		//Parse the HTML doc
-		Document doc = Jsoup.connect(url.toString()).get();
+		Document doc = Jsoup.connect(url.toString()).userAgent(userAgent).get();
 		
 		//Check if it is a known host
 		HostFetcher fetcher = HostFetcherFactory.getFetcher(url.getHost());
@@ -161,7 +162,11 @@ public class ImageFetcher {
 	 */
 	private URLConnection open(URL url) throws IOException{
 		URLConnection conn = url.openConnection();
-		conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
+		conn.setRequestProperty("User-Agent", userAgent);
 		return conn;
+	}
+	
+	public static void setUserAgent(String ua){
+		userAgent = ua;
 	}
 }
