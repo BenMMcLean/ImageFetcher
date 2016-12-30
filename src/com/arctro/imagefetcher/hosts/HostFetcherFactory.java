@@ -28,6 +28,8 @@ public class HostFetcherFactory {
 			return new TwitterHostFetcher();
 		case "deviantart.com":
 			return new DeviantArtHostFetcher();
+		case "i.imgur.com":
+			return new I_ImgurHostFetcher();
 		}
 		
 		if(customHosts.containsKey(host)){
