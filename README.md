@@ -18,7 +18,7 @@ Using it is a simple as:
 ImageFetcher f = new ImageFetcher();
 FetchResult fr = f.fetch(new URL("https://imgur.com/gallery/aKaOqIh"));
 
-FileUtils.writeByteArrayToFile(new File("fetched.jpg"), b.getImage());
+FileUtils.writeByteArrayToFile(new File("fetched." + fr.getType().getSubtype()), b.getImage());
 
 ```
 Adding custom host support is as simple as:
